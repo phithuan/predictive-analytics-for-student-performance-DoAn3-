@@ -1,114 +1,67 @@
-# Import các thư viện cần thiết
-import streamlit as st  # Thư viện Streamlit để tạo ứng dụng web tương tác
-import pandas as pd     # Thư viện xử lý dữ liệu bảng
-import plotly.express as px  # Thư viện vẽ biểu đồ tương tác
-from sqlalchemy import create_engine  # Tạo kết nối cơ sở dữ liệu SQL
-import time  # Thư viện để sử dụng sleep (ngủ chờ)
-
-    # ===================== CẤU HÌNH GIAO DIỆN STREAMLIT =====================
-    # Thiết lập tiêu đề trang và bố cục hiển thị (rộng toàn màn hình)
-#st.set_page_config(page_title="🎓 Student Performance Dashboard", layout="wide")
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sqlalchemy import create_engine
 
 def app():
-    # ===================== KẾT NỐI CƠ SỞ DỮ LIỆU ============================
-    # Tạo kết nối tới PostgreSQL thông qua SQLAlchemy
-    # Định dạng: 'postgresql://<username>:<password>@<host>:<port>/<database>'
-    engine = create_engine('postgresql://postgres:123@localhost:5432/student_PB')
+    st.title("📊 Phân tích hiệu suất học tập theo Khoa")
 
+    # ===================== KẾT NỐI DATABASE =====================
+    #engine = create_engine('postgresql://postgres:123@localhost:5432/student_performance_behavior')
 
-    # Tiêu đề chính của trang dashboard
-    st.title("📊 Real-Time Student Performance Dashboard")
+    # ===================== TẢI DỮ LIỆU ==========================
+    # Thiết lập seaborn cho đẹp hơn
+    sns.set(style="whitegrid")
 
-    # ===================== SIDEBAR: CHỌN THỜI GIAN REFRESH =================
-    # Cho phép người dùng chọn khoảng thời gian làm mới dữ liệu (giây)
-    refresh_interval = st.sidebar.slider("⏱ Refresh Interval (seconds)", 5, 60, 10)
+    # Load dataset
+    dataset = r'D:\MINI_Project\DoAn3\students_grading_dataset_clean.csv'
+    df = pd.read_csv(dataset)
 
-    # ===================== HÀM LOAD DỮ LIỆU TỪ POSTGRESQL ==================
-    # Dùng cache để tránh truy vấn DB liên tục, TTL xác định thời gian cache tồn tại
-    @st.cache_data(ttl=refresh_interval)
-    def load_data():
-        query = """
-        SELECT s.student_id, s.first_name, s.last_name, s.gender, s.age, d.department_name,
-            ap.total_score, ap.grade, ef.stress_level, ef.study_hours_per_week
-        FROM students s
-        JOIN departments d ON s.department_id = d.department_id
-        JOIN academic_performance ap ON s.student_id = ap.student_id
-        JOIN external_factors ef ON s.student_id = ef.student_id;
-        """
-        df = pd.read_sql(query, engine)  # Thực hiện truy vấn và lấy dữ liệu dưới dạng DataFrame
-        return df
+    # 1. Lấy mẫu đều từ mỗi khoa
+    sample_size = 1000  # Số lượng mẫu muốn lấy từ mỗi khoa
+    df_sampled = df.groupby("Department").apply(lambda x: x.sample(n=sample_size, random_state=2500)).reset_index(drop=True)
 
-    # ===================== TẢI DỮ LIỆU =====================
-    df = load_data()
+    # 2. Tính điểm trung bình theo khoa
+    dept_avg = df_sampled.groupby("Department")["Total_Score"].mean()
 
-    # ===================== SIDEBAR: BỘ LỌC DỮ LIỆU ==========================
-    # Bộ lọc theo khoa (department)
-    departments = st.sidebar.multiselect(
-        "🏫 Chọn Khoa", 
-        options=df['department_name'].unique(),  # Danh sách khoa duy nhất
-        default=df['department_name'].unique()   # Mặc định chọn tất cả
+    # 3. Tính điểm danh trung bình theo khoa
+    attendance_avg = df_sampled.groupby("Department")["Attendance (%)"].mean()
+
+    # 4. Đếm số lượng học sinh theo từng loại điểm (Grade) trong mỗi khoa
+    dept_grade_cnt = pd.crosstab(df_sampled['Department'], df_sampled['Grade'])
+
+    fig, axes = plt.subplots(1, 2, figsize=(16, 9))  # 1 hàng, 2 cột
+
+    # 5.1 Biểu đồ Pie thể hiện phân phối điểm trung bình theo khoa
+    axes[0].pie(
+        dept_avg,
+        labels=dept_avg.index,
+        autopct='%1.1f%%',
+        colors=sns.color_palette("mako", len(dept_avg))
     )
+    axes[0].set_title("Equal Sampled Total Score Distribution", fontsize=14, fontweight="bold")
 
-    # Bộ lọc theo giới tính
-    genders = st.sidebar.multiselect(
-        "⚧️ Giới tính", 
-        options=df['gender'].unique(), 
-        default=df['gender'].unique()
+    # 5.3 Biểu đồ cột xếp chồng thể hiện phân phối điểm (Grade) theo khoa
+    bar_colors = sns.color_palette("Set2", n_colors=len(dept_grade_cnt.columns))
+    dept_grade_cnt.plot(
+        kind="bar",
+        stacked=True,
+        color=bar_colors,
+        ax=axes[1],
+        edgecolor="black",
+        linewidth=1.2
     )
+    axes[1].set_title("Grade Distribution Across Departments", fontsize=14, fontweight="bold")
+    axes[1].set_xlabel("Department")
+    axes[1].set_ylabel("Number of Students")
+    axes[1].tick_params(axis='x', rotation=45)  # Xoay trục X 45 độ cho dễ đọc
 
-    # ===================== ÁP DỤNG BỘ LỌC ============================
-    filtered_df = df[
-        (df['department_name'].isin(departments)) & 
-        (df['gender'].isin(genders))
-    ]
+    # 6. Tối ưu bố cục và hiển thị trên Streamlit
+    plt.tight_layout()
+    st.pyplot(fig)
 
-    # ===================== HIỂN THỊ METRIC ===========================
-    # Hiển thị số lượng sinh viên theo bộ lọc
-    st.metric("👩‍🎓 Số sinh viên", len(filtered_df))
-
-    # ===================== BIỂU ĐỒ 1: Histogram điểm tổng ===================
-    # Biểu đồ histogram thể hiện phân phối điểm tổng của sinh viên
-    fig1 = px.histogram(
-        filtered_df, 
-        x="total_score", 
-        nbins=20, 
-        title="📈 Phân phối điểm tổng"
-    )
-    st.plotly_chart(fig1, use_container_width=True)
-
-    # ===================== BIỂU ĐỒ 2: Trung bình Stress theo khoa ===========
-    # Tính trung bình stress theo từng khoa
-    stress_avg = filtered_df.groupby("department_name")["stress_level"].mean().reset_index()
-
-    # Vẽ biểu đồ cột
-    fig2 = px.bar(
-        stress_avg, 
-        x="department_name", 
-        y="stress_level", 
-        title="😣 Trung bình Stress theo Khoa"
-    )
-    st.plotly_chart(fig2, use_container_width=True)
-
-    # ===================== BIỂU ĐỒ 3: Pie chart phân loại theo Grade ========
-    # Đếm số lượng sinh viên theo Grade
-    grade_count = filtered_df['grade'].value_counts().reset_index()
-    grade_count.columns = ['grade', 'count']  # Đặt lại tên cột
-
-    # Vẽ biểu đồ tròn
-    fig3 = px.pie(
-        grade_count, 
-        names='grade', 
-        values='count', 
-        title="🎯 Phân loại sinh viên theo Grade"
-    )
-    st.plotly_chart(fig3, use_container_width=True)
-
-    # ===================== TỰ ĐỘNG REFRESH GIAO DIỆN ========================
-    # Thông báo cho người dùng biết sẽ tự động làm mới sau X giây
-    st.info(f"Tự động làm mới sau {refresh_interval} giây...")
-
-    # Tạm dừng chương trình trong khoảng thời gian đã chọn
-    time.sleep(refresh_interval)
-
-    # Gọi lại script từ đầu (để thực hiện cập nhật dữ liệu)
-    st.rerun()  # Dùng trong Streamlit >= 1.27, thay cho st.experimental_rerun()
+    # Thêm thông tin bổ sung
+    st.subheader("📋 Summary Statistics")
+    st.write("Average Total Score by Department:", dept_avg)
+    st.write("Average Attendance (%) by Department:", attendance_avg)
