@@ -1,0 +1,32 @@
+data em lấy từ Kaggle
+
+em tải về dạng csv sau đó em tiền xử lý data xem coi có dữ lieu nào bị thiếu k hoặc là có bị sai gì k thì em chỉnh sửa lại
+
+sau dó em dưa data vào CSDL Posget
+
+- mục tiêu của dề tài này là 
+	+ trực quang hóa data danh gia hieu xuat hoc tap cua sinh vien (trên web streamlit)
+	+ áp dung mô hình để dự đoán xem trong tương lai sinh viên học tốt đi hay kém (dựa vào dặc trưng như ) 
+Gender – Giới tính
+
+Age – Tuổi
+
+Department – Khoa / Ngành học
+
+Attendance (%) – Tỷ lệ điểm danh (% đi học)
+
+Study_Hours_per_Week – Số giờ học mỗi tuần
+
+Extracurricular_Activities – Tham gia hoạt động ngoại khóa
+
+Internet_Access_at_Home – Có truy cập Internet tại nhà
+
+Parent_Education_Level – Trình độ học vấn của phụ huynh
+
+Family_Income_Level – Mức thu nhập của gia đình
+
+Stress_Level (1-10) – Mức độ căng thẳng (từ 1 đến 10)
+
+Sleep_Hours_per_Night – Số giờ ngủ mỗi đêm
+
+	+ nếu có thời gian em tích hợp them chatbot

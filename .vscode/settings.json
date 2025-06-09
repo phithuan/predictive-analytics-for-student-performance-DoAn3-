@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "PG adim_DA3",
+            "username": "postgres",
+            "database": "student_performance_behavior",
+            "connectionTimeout": 30
+        }
+    ]
+}
