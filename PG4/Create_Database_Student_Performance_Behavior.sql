@@ -1,6 +1,6 @@
 -- Tạo database nếu chưa có
 --CREATE DATABASE Student_Performance_Behavior;
---\c Student_Performance_Behavior;
+--\c student_performance_behavior;
 
 -- Bảng chính: chứa toàn bộ thông tin sinh viên
 CREATE TABLE students (
