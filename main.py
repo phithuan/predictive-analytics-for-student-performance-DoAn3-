@@ -3,7 +3,8 @@ from streamlit_option_menu import option_menu
 import os
 from dotenv import load_dotenv
 import sys
-sys.path.append(r"D:\MINI_Project\DoAn3\predict_train")  # đường dẫn chứa predict_app.py
+#sys.path.append(r"D:\MINI_Project\DoAn3\predict_train_RanDomForest")  # đường dẫn chứa predict_app.py
+from predict_train_RanDomForest import predict_app
 
 import home, DashBoard_App, account, predict_app  # đảm bảo 2 file này tồn tại và có hàm app()
 

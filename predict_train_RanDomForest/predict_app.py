@@ -4,7 +4,7 @@ import joblib
 
 def app():
     # Tải mô hình đã huấn luyện
-    model = joblib.load(r'D:\MINI_Project\DoAn3\predict_train\student_at_risk_model.pkl')
+    model = joblib.load(r'D:\MINI_Project\DoAn3\predict_train_RanDomForest\student_at_risk_model.pkl')
 
     # Tiêu đề ứng dụng
     #st.title("Dự đoán Nguy cơ Học tập Kém của Sinh viên")

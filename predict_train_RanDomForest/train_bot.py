@@ -55,3 +55,22 @@ model.fit(X_train, y_train)
 # Lưu mô hình đã huấn luyện vào file .pkl để sử dụng sau
 joblib.dump(model, 'student_at_risk_model.pkl')
 print("Mô hình đã được huấn luyện và lưu vào 'student_at_risk_model.pkl'")
+
+
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Dự đoán trên tập kiểm tra
+y_pred = model.predict(X_test)
+
+# Tính độ chính xác
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Độ chính xác của mô hình: {accuracy:.2f}")
+
+# In báo cáo phân loại chi tiết
+print("\n=== Classification Report ===")
+print(classification_report(y_test, y_pred))
+
+# In ma trận nhầm lẫn
+print("\n=== Confusion Matrix ===")
+print(confusion_matrix(y_test, y_pred))
+

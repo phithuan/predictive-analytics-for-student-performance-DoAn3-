@@ -10,5 +10,8 @@
             "database": "student_performance_behavior",
             "connectionTimeout": 30
         }
+    ],
+    "python.analysis.extraPaths": [
+        "./predict_train_RanDomForest"
     ]
 }
