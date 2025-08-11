@@ -12,6 +12,7 @@
         }
     ],
     "python.analysis.extraPaths": [
-        "./predict_train_RanDomForest"
+        "./predict_train_RanDomForest",
+        "./perdict_train_XGBoost"
     ]
 }
