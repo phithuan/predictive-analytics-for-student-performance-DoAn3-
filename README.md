@@ -1,6 +1,5 @@
-Dưới đây là nội dung được chuyển đổi từ mã `home.py` sang định dạng `README.md` theo phong cách ví dụ bạn cung cấp:
+# 🎓 Student Performance & Behavior Dataset– Data Cleaning, Analysis & Machine Learning
 
-```markdown
 # 🎓 Phân Tích Hiệu Xuất Học Tập Của Sinh Viên
 
 ## 📌 Mô tả dự án
@@ -136,13 +135,16 @@ Dự án sử dụng **CatBoost** vì các lý do sau:
 - **Ngôn ngữ lập trình**: Python
 - **Thư viện**: Streamlit, CatBoost, Scikit-learn
 - **Nguồn dữ liệu**: Kaggle
+
+## Tài liệu tham khảo
+- CatBoost: https://www.geeksforgeeks.org/machine-learning/catboost-ml/
+- CatBoost Parameters and Hyperparameters: https://www.geeksforgeeks.org/machine-learning/catboost-parameters-and-hyperparameters/
+- Kaggle Dataset: https://www.kaggle.com/datasets/mahmoudelhemaly/students-grading-dataset
+- Scikit-learn documentation: https://scikit-learn.org/
+- Pandas documentation: https://pandas.pydata.org/
+- Matplotlib: https://matplotlib.org/
+- Streamlit: https://streamlit.io/
 ```
 
-### Giải thích
-- **Cấu trúc**: Nội dung được tổ chức theo các mục chính như trong ví dụ (`Mô tả dự án`, `Thông tin về dữ liệu`, `Mô hình học máy`, `Quá trình huấn luyện`, `Kết luận & Hướng phát triển`).
-- **Ngôn ngữ**: Sử dụng tiếng Việt, giữ nguyên các thuật ngữ kỹ thuật và định dạng tương tự ví dụ.
-- **Biểu tượng**: Thêm các biểu tượng emoji (📌, 📊, 🧮, v.v.) để tăng tính trực quan, đúng theo phong cách ví dụ.
-- **Định dạng Markdown**: Sử dụng tiêu đề (`#`, `##`), danh sách, bảng, và khối mã (` ```python `) để trình bày rõ ràng và chuyên nghiệp.
-- **Nội dung**: Chuyển đổi toàn bộ thông tin từ `home.py` sang dạng văn bản Markdown, giữ nguyên các chi tiết kỹ thuật và kết quả.
 
-Nếu bạn cần chỉnh sửa thêm hoặc muốn thêm phần nào (ví dụ: cách chạy dự án, hướng dẫn cài đặt), hãy cho tôi biết!
+
