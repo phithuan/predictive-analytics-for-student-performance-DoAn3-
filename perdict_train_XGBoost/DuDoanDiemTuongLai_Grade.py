@@ -28,10 +28,10 @@ def app():
     # =========================
     # 4. Giao diện
     # =========================
-    st.title("🎓 Student Grade Prediction - CatBoost Model")
-    st.write("Dự đoán điểm **Grade** (A/B/C/D) từ dữ liệu sinh viên.")
+    st.title("🎓 dự đoán điểm học kì tiếp theo - CatBoost Model")
+    st.write("Dự đoán điểm **Grade** (A/B/C/D)")
 
-    st.subheader("Nhập thông tin sinh viên")
+    st.subheader("Nhập thông tin để dự đoán")
     col1, col2 = st.columns(2)
 
     with col1:
