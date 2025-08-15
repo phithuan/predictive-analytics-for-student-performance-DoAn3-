@@ -8,7 +8,7 @@ def app():
         st.markdown("""
         **Lý do chọn đề tài:**  
         - Có nhiều sinh viên gặp khó khăn nhưng chưa được hỗ trợ kịp thời 
-        - phát hiện sớm sinh viên có nguy cơ tụt hậu hoặc bỏ học
+        - tạo mô hình nhầm mục đích phát hiện sớm sinh viên có nguy cơ tụt hậu hoặc bỏ học
         - từ đó hỗ trợ kịp thời và nâng cao chất lượng đào tạo  
 
         **Mục tiêu:**  
@@ -63,21 +63,21 @@ def app():
         |-----------------------------|---------------------------|----------------|------------------|
         | Xử lý đặc trưng phân loại   | Tự động                   | Hỗ trợ cơ bản  | Cần tiền xử lý   |
         | Chiến lược chia cây         | Đối xứng                   | Theo lá        | Theo độ sâu      |
-        | Tốc độ & hiệu suất          | Tối ưu                     | Lớn            | Nhanh & mở rộng  |
+        | Tốc độ & hiệu suất          | Ổn định và tối ưu với dữ liệu vừa & nhỏ, đặc biệt khi có nhiều đặc trưng phân loại                     | Rất nhanh với tập dữ liệu lớn, tối ưu cho hàng triệu bản ghi            | Nhanh, linh hoạt, mở rộng tốt trên CPU & GPU  |
 
         **🎯 Vì sao chọn CatBoost?**
         - 🔍 Xử lý đặc trưng phân loại tốt mà không cần One-Hot Encoding ➡️ tiết kiệm thời gian tiền xử lý.
         - ⚡ Hiệu suất ổn định ngay cả khi dữ liệu không quá lớn hoặc không cân bằng.
         - 🛡 Chống overfitting tốt nhờ kỹ thuật Ordered Boosting độc quyền.
-        - 🧠 
-        
+        - 🧠 dữ liệu chỉ 5000 mẫu, nhưng vẫn đạt được kết quả tốt ở thuật toán CatBoost.
+
         **📈 So sánh kết quả:**
         - CatBoost: Accuracy **0.65**, F1 **0.51** ✅
         - XGBoost: Accuracy **0.597**, F1 **0.5524** 🔻
         - LightGBM: Tốc độ huấn luyện nhanh nhưng cần xử lý dữ liệu rất kỹ.
         """)
 
-    with st.expander("📈 QUÁ TRÌNH HUẤN LUYỆN & CẢI THIỆN MÔ HÌNH CATBOOST"):
+    with st.expander("🔍 4: QUÁ TRÌNH HUẤN LUYỆN & CẢI THIỆN MÔ HÌNH CATBOOST"):
         st.markdown("""
         **1️⃣ Mô hình CatBoost ban đầu (Baseline)**  
         - Tham số mặc định.  
@@ -121,6 +121,11 @@ def app():
         ---
 
         **4️⃣ Chuyển sang bài toán nhị phân**  
+        Trong thực tế, việc đánh giá học lực thông qua điểm chữ (Grade: A, B, C, D) giúp phân loại trình độ học sinh. 
+        Tuy nhiên, ở góc độ quản lý và hỗ trợ học tập, chỉ cần số nhị phân phản ánh `nguy cơ học yếu` để:
+            	 Cảnh báo sớm
+            	- Tập trung nguồn lực hỗ trợ
+            	- Đơn giản hóa dự đoán
         - Quy ước:  
             - `at_risk = 1` nếu Grade ∈ {C, D}  
             - `at_risk = 0` nếu Grade ∈ {A, B}  
@@ -135,14 +140,14 @@ def app():
     with st.expander("📊 5️⃣ Kết luận & Hướng phát triển"):
         st.markdown("""
         **Kết quả:**  
-        - CatBoost dự đoán trên 23 đặc trưng, Accuracy 65%.  
+        - CatBoost dự đoán trên 14 đặc trưng, Accuracy 65%.  
 
         **Hạn chế:**  
-        - Tương quan đặc trưng thấp, dữ liệu nhiễu, mất cân bằng nhãn, tập dữ liệu nhỏ.  
+        - Tương quan đặc trưng thấp dữ liệu , mất cân bằng nhãn, tập dữ liệu nhỏ.  
+        -> độ chính xác của mô hình sẽ không được cao
 
         **Hướng phát triển:**
         - chat bot hỗ trợ tư vấn học tập.  
         - Mở rộng dữ liệu từ nhiều nguồn.  
-        - Tích hợp dashboard thời gian thực.  
-        - Thêm yếu tố tâm lý, hành vi.
+        - Tích hợp dashboard thời gian thực/ giao diện thân hiện hơn
         """)

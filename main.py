@@ -3,12 +3,13 @@ from streamlit_option_menu import option_menu
 import os
 from dotenv import load_dotenv
 import sys
-sys.path.append(r"D:\MINI_Project\DoAn3\predict_train_RanDomForest")
+#sys.path.append(r"D:\MINI_Project\DoAn3\predict_train_RanDomForest")
 sys.path.append(r"D:\MINI_Project\DoAn3\perdict_train_XGBoost")  # đường dẫn chứa predict_app.py
-from predict_train_RanDomForest import predict_app
-from perdict_train_XGBoost import app_catboost
+sys.path.append(r"D:\MINI_Project\DoAn3\CatBoost") 
+#from predict_train_RanDomForest import predict_app
+from perdict_train_XGBoost import app_catboost, DuDoanDiemTuongLai_Grade
 
-import home, DashBoard_App, account, predict_app, app_catboost  # đảm bảo 2 file này tồn tại và có hàm app()
+import home, DashBoard_App, DuDoanDiemTuongLai_Grade, app_catboost , account  # đảm bảo 2 file này tồn tại và có hàm app()
 
 # Load biến môi trường từ .env
 load_dotenv()
@@ -50,7 +51,7 @@ class MultiApp:
         with st.sidebar:
             app = option_menu(
                 menu_title="📚 Menu",
-                options=["Home", "Dashboard","predict student performance use RanDomForest","predict student performance use CatBoost","account"],
+                options=["Home", "Dashboard","DuDoanDiemTuongLai_Grade","predict student performance use CatBoost","account"],
                 icons=["house-fill", "bar-chart-line-fill","trophy-fill","trophy-fill","person-circle"],
                 menu_icon="chat-text-fill",
                 default_index=0,
@@ -73,8 +74,8 @@ class MultiApp:
             home.app()
         if app == "Dashboard":
             DashBoard_App.app()
-        if app == "predict student performance use RanDomForest":
-            predict_app.app()
+        if app == "DuDoanDiemTuongLai_Grade":
+            DuDoanDiemTuongLai_Grade.app()
         if app == "predict student performance use CatBoost":
             app_catboost.app()    
         if app == "account":
@@ -86,7 +87,7 @@ class MultiApp:
 app = MultiApp()
 app.add_app("Home", home.app)
 app.add_app("Dashboard", DashBoard_App.app)
-app.add_app("predict student performance use RanDomForest",predict_app.app)
+app.add_app("DuDoanDiemTuongLai_Grade",DuDoanDiemTuongLai_Grade.app)
 app.add_app("predict student performance use CatBoost",app_catboost.app )
 app.add_app("account", account.app)
     
