@@ -103,8 +103,9 @@ Mô hình được lựa chọn là **CatBoostClassifier** – một thuật to�
 
 ### ✅ Kết quả  
 - CatBoost cho hiệu suất **rất cao (Accuracy ~96%, F1-weighted ~96%)**.  
-- Mô hình vượt trội so với baseline và ổn định trên hầu hết các lớp.  
-
+- Mô hình vượt trội so với baseline và ổn định trên hầu hết các lớp.
+![alt text](image.png)  
+![alt text](image-1.png)
 ### ⚠️ Hạn chế  
 - Dữ liệu mất cân bằng → ảnh hưởng đến lớp thiểu số.  
 - Tập dữ liệu nhỏ, khó khái quát cho quy mô lớn.  
