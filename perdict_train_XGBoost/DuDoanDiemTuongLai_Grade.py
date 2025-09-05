@@ -8,9 +8,9 @@ def app():
     # =========================
     @st.cache_resource
     def load_model():
-        model = joblib.load(r"D:\MINI_Project\DoAn3\perdict_train_XGBoost\catboost_model_final.pkl")
-        cat_features = joblib.load(r"D:\MINI_Project\DoAn3\perdict_train_XGBoost\cat_features_final.pkl")
-        label_map = joblib.load(r"D:\MINI_Project\DoAn3\perdict_train_XGBoost\label_map_final.pkl")
+        model = joblib.load(r"D:\MINI_Project\DoAn3\perdict_train_XGBoost\catboost_model_finalGOOD.pkl")
+        cat_features = joblib.load(r"D:\MINI_Project\DoAn3\perdict_train_XGBoost\cat_features_finalGOOD.pkl")
+        label_map = joblib.load(r"D:\MINI_Project\DoAn3\perdict_train_XGBoost\label_map_finalGOOD.pkl")
         return model, cat_features, label_map
 
     model, cat_features, label_map = load_model()

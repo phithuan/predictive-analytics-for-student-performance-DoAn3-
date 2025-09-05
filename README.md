@@ -1,150 +1,134 @@
-# 🎓 Student Performance & Behavior Dataset– Data Cleaning, Analysis & Machine Learning
+# 🎓 Student Performance & Behavior Dataset – Data Cleaning, Analysis & Machine Learning  
 
-# 🎓 Phân Tích Hiệu Xuất Học Tập Của Sinh Viên
-
-## 📌 Mô tả dự án
-
-Dự án này sử dụng bộ dữ liệu từ [Kaggle - Students Grading Dataset](https://www.kaggle.com/datasets/mahmoudelhemaly/students-grading-dataset) để xây dựng một hệ thống phân tích và dự đoán hiệu suất học tập của sinh viên. Mục tiêu chính bao gồm:
-
-1. **Phát hiện sớm nguy cơ tụt hậu**: Xác định sinh viên có nguy cơ học kém hoặc bỏ học để hỗ trợ kịp thời.
-2. **Trực quan hóa dữ liệu**: Cung cấp cái nhìn tổng quan về hiệu suất học tập thông qua các yếu tố gián tiếp.
-3. **Xây dựng mô hình học máy**: Dự đoán kết quả học tập dựa trên các đặc trưng như giờ học, mức độ căng thẳng, giấc ngủ, và tỷ lệ chuyên cần.
+# 🎓 XÂY DỰNG MÔ HÌNH DỰ ĐOÁN KẾT QUẢ HỌC TẬP CỦA SINH VIÊN  
 
 ---
 
-## 📊 Thông tin về dữ liệu
+## 📌 Mục tiêu dự án  
+Mục tiêu của dự án này là phát triển mô hình dự đoán **kết quả học tập của sinh viên** dựa trên các yếu tố đầu vào như:  
+- Thông tin nhân khẩu học.  
+- Điểm số ở các kỳ trước.  
+- Điều kiện gia đình.  
+- Thói quen học tập và sinh hoạt.  
 
-- **Tên tệp**: `Students_Grading_Dataset.csv`
-- **Nguồn**: [Kaggle Dataset](https://www.kaggle.com/datasets/mahmoudelhemaly/students-grading-dataset)
-- **Số lượng đặc trưng**: 23 đặc trưng về học tập và thông tin cá nhân.
-
-### 📜 Chi tiết 23 thuộc tính
-1. **Student_ID**: Mã định danh duy nhất cho mỗi sinh viên.
-2. **First_Name**: Tên của học sinh.
-3. **Last_Name**: Họ của học sinh.
-4. **Email**: Email liên hệ (có thể ẩn danh).
-5. **Giới tính**: Nam, Nữ, Khác.
-6. **Tuổi**: Độ tuổi của học sinh.
-7. **Khoa**: Khoa của sinh viên (VD: Khoa học máy tính, Kỹ thuật, Kinh doanh).
-8. **Attendance (%)**: Tỷ lệ tham dự (0-100%).
-9. **Midterm_Score**: Điểm thi giữa kỳ (0 Ordering-100).
-10. **Final_Score**: Điểm thi cuối kỳ (0-100).
-11. **Assignments_Avg**: Điểm trung bình của bài tập (0-100).
-12. **Quizzes_Avg**: Điểm trả lời câu hỏi trên lớp trung bình (0-100).
-13. **Participation_Score**: Điểm tham gia lớp (0-10).
-14. **Projects_Score**: Điểm dự án (0-100).
-15. **Total_Score**: Tổng điểm có trọng số.
-16. **Điểm (Grade)**: Điểm chữ (A, B, C, D, F).
-17. **Study_Hours_per_Week**: Giờ học mỗi tuần.
-18. **Hoạt động ngoại khóa**: Có/Không.
-19. **Internet_Access_at_Home**: Có/Không.
-20. **Parent_Education_Level**: Trình độ học vấn cao nhất của cha mẹ.
-21. **Mức thu nhập gia đình**: Thấp, Trung bình, Cao.
-22. **Mức độ căng thẳng**: Thang 1-10.
-23. **Sleep_Hours_per_Night**: Giờ ngủ mỗi đêm.
-
-**Lưu ý**:
-- Các thuộc tính điểm thi (`Final_Score`, `Midterm_Score`, …) được loại bỏ để tránh mô hình trở thành phép tính cộng điểm, đảm bảo ý nghĩa dự đoán.
-- Chỉ sử dụng các yếu tố gián tiếp như giờ học, điều kiện internet, trình độ cha mẹ, mức căng thẳng, giấc ngủ, tuổi, và tỷ lệ chuyên cần.
+Mô hình được lựa chọn là **CatBoostClassifier** – một thuật toán boosting trên cây quyết định (Gradient Boosting Decision Trees) do Yandex phát triển, nổi bật ở khả năng:  
+- Xử lý trực tiếp biến phân loại (categorical features) **không cần One-Hot Encoding**.  
+- Giảm hiện tượng overfitting thông qua **l2_leaf_reg**.  
+- Tự động chọn cách chia dữ liệu (**oblivious decision trees**).  
+- Hiệu quả cao với dữ liệu có nhiều loại biến khác nhau.  
 
 ---
 
-## 🧮 Mô hình học máy
+## 📊 Thông tin về dữ liệu  
+- **Tên tệp**: `students_grading_dataset_clean.csv`  
+- **Nguồn**: [Kaggle Dataset](https://www.kaggle.com/datasets/mahmoudelhemaly/students-grading-dataset)  
+- **Số đặc trưng**: 23 (bao gồm nhân khẩu học, học tập, điều kiện gia đình, thói quen).  
 
-### Lựa chọn mô hình: CatBoost
-Dự án sử dụng **CatBoost** vì các lý do sau:
-- **Xử lý đặc trưng phân loại tự động**: Không cần One-Hot Encoding, tiết kiệm thời gian tiền xử lý.
-- **Hiệu suất ổn định**: Phù hợp với dữ liệu nhỏ hoặc không cân bằng.
-- **Chống overfitting**: Kỹ thuật Ordered Boosting độc quyền giúp cải thiện độ chính xác.
-
-#### So sánh với các mô hình khác
-| Thuộc tính                  | CatBoost                  | LightGBM        | XGBoost          |
-|-----------------------------|---------------------------|----------------|------------------|
-| Xử lý đặc trưng phân loại   | Tự động                   | Hỗ trợ cơ bản  | Cần tiền xử lý   |
-| Chiến lược chia cây         | Đối xứng                  | Theo lá        | Theo độ sâu      |
-| Tốc độ & hiệu suất          | Tối ưu                    | Lớn            | Nhanh & mở rộng  |
-
-#### Kết quả so sánh
-- **CatBoost**: Accuracy **0.65**, F1 **0.51** ✅
-- **XGBoost**: Accuracy **0.597**, F1 **0.5524** 🔻
-- **LightGBM**: Tốc độ huấn luyện nhanh nhưng yêu cầu xử lý dữ liệu kỹ lưỡng.
+**Các bước tiền xử lý dữ liệu:**  
+- Loại bỏ cột không cần thiết: `Student_ID`, `First_Name`, `Last_Name`, `Email`.  
+- Tách biến đầu vào `X` và biến mục tiêu `y` (`Grade`: A, B, C, D).  
+- Xác định biến phân loại bằng `select_dtypes(include='object')` → truyền vào `cat_features` của CatBoost.  
+- Chia tập dữ liệu bằng `train_test_split` (80% train – 20% test, `random_state=42`).  
 
 ---
 
-## 📈 Quá trình huấn luyện & cải thiện mô hình CatBoost
+## 🧮 Mô hình học máy  
 
-### 1️⃣ Mô hình ban đầu (Baseline)
-- Tham số mặc định.
-- **Accuracy**: 57%
-- Hạn chế: Dự đoán kém ở lớp thiểu số **A** và **D**.
+### 🔹 Mô hình CatBoost chưa tinh chỉnh (Baseline)  
+- **Tham số mặc định quan trọng**:  
+  - `iterations = 1000`  
+  - `learning_rate = 0.03`  
+  - `depth = 6`  
+  - `l2_leaf_reg = 3.0`  
+  - `loss_function = 'MultiClass'`  
 
-### 2️⃣ Tinh chỉnh sơ bộ
-- **Tham số**:
-  - `iterations = 100`: Số vòng lặp (cây).
-  - `learning_rate = 0.1`: Tốc độ học.
-  - `depth = 6`: Độ sâu cây.
-  - `verbose = 0`: Ẩn log huấn luyện.
-  - `class_weights = [5.0, 1.0, 1.0, 10.0]`: Ưu tiên lớp **A** và **D**.
-- **Accuracy**: 59%
+**Kết quả baseline**:  
+- **Accuracy**: ~0.95  
+- **F1-weighted**: ~0.95  
 
-### 3️⃣ Tối ưu bằng RandomizedSearchCV
-- **Tập siêu tham số**:
-  ```python
-  param_grid = {
-      'iterations': [100, 300, 500],
-      'learning_rate': [0.01, 0.05, 0.1, 0.2],
-      'depth': [4, 6, 8, 10],
-      'l2_leaf_reg': [1, 3, 5, 7],
-      'border_count': [32, 64, 128]
-  }
-  ```
-- **Phương pháp**:
-  - Thử 20 tổ hợp tham số ngẫu nhiên (`n_iter=20`).
-  - Đánh giá bằng `f1_weighted`, kiểm định chéo 3 lần (`cv=3`).
-  - Chạy song song (`n_jobs=-1`) để tăng tốc.
-- **Accuracy**: 60%
-- Hạn chế: Vẫn gặp khó khăn với lớp thiểu số.
+**Hiệu suất theo lớp:**  
+| Lớp | Precision | Recall | F1-score | Nhận xét |
+|-----|-----------|--------|----------|----------|
+| 0   | 0.93      | 0.81   | 0.86     | Precision cao nhưng recall thấp → bỏ sót nhiều mẫu. |
+| 1   | 0.96      | 0.95   | 0.96     | Ổn định, chính xác cao. |
+| 2   | 0.95      | 0.96   | 0.96     | Hiệu suất tốt, dữ liệu nhiều. |
+| 3   | 0.57      | 0.58   | 0.57     | Kém nhất do số mẫu ít (8). |
 
-### 4️⃣ Chuyển sang bài toán nhị phân
-- **Quy ước**:
-  - `at_risk = 1` nếu Grade ∈ {C, D}
-  - `at_risk = 0` nếu Grade ∈ {A, B}
-- **Kết quả**: Accuracy **65%**, hiệu quả hơn trong nhận diện nhóm sinh viên **nguy cơ yếu**.
+**Nhận xét:**  
+- Mô hình dự đoán tốt với lớp lớn (1, 2), nhưng yếu với lớp nhỏ (0, 3).  
+- **Macro F1 = 0.84**, thấp hơn Weighted F1 do lớp thiểu số khó học.  
 
 ---
 
-## 📊 Kết luận & Hướng phát triển
+### 🔹 Tinh chỉnh siêu tham số bằng RandomizedSearchCV  
 
-### Kết quả
-- Mô hình CatBoost đạt **Accuracy 65%** trên 23 đặc trưng.
+**Phương pháp:**  
+- Dùng **RandomizedSearchCV** với `n_iter=20`, `cv=3`, `scoring='f1_weighted'`.  
+- Lý do chọn F1-weighted: cân bằng giữa precision và recall, phù hợp với dữ liệu mất cân bằng.  
+- Tận dụng `n_jobs=-1` để tăng tốc.  
 
-### Hạn chế
-- Tương quan đặc trưng thấp.
-- Dữ liệu nhiễu, mất cân bằng nhãn.
-- Tập dữ liệu nhỏ.
+**Siêu tham số điều chỉnh:**  
+- `iterations` – số cây.  
+- `learning_rate` – tốc độ học.  
+- `depth` – độ sâu cây.  
+- `l2_leaf_reg` – điều chuẩn L2.  
+- `border_count` – số ngưỡng chia biến liên tục.  
+- `rsm` – tỷ lệ chọn ngẫu nhiên feature cho mỗi cây.  
+- `random_strength` – mức độ ngẫu nhiên khi chọn split.  
+- `bagging_temperature` – kiểm soát đa dạng mẫu huấn luyện.  
 
-### Hướng phát triển
-- Xây dựng chatbot hỗ trợ tư vấn học tập.
-- Mở rộng dữ liệu từ nhiều nguồn.
-- Tích hợp dashboard thời gian thực.
-- Thêm các yếu tố tâm lý và hành vi.
+**Kết quả tối ưu (sau tinh chỉnh):**  
+- **Accuracy**: ~0.96  
+- **F1-weighted**: ~0.96  
+
+**Bảng chi tiết:**  
+| Lớp | Precision | Recall | F1-score | Nhận xét |
+|-----|-----------|--------|----------|----------|
+| 0   | 0.92      | 0.77   | 0.84     | Precision tốt nhưng recall thấp. |
+| 1   | 0.97      | 0.96   | 0.97     | Rất ổn định, cả precision và recall đều cao. |
+| 2   | 0.95      | 0.96   | 0.96     | Giữ được độ chính xác cao. |
+| 3   | 0.71      | 0.62   | 0.67     | Thấp nhất do mất cân bằng (chỉ 8 mẫu). |
+
+**Điểm mạnh:**  
+- Cân bằng precision và recall tốt ở các lớp chính (1, 2).  
+- Không overfit rõ rệt.  
+- RandomizedSearchCV tìm được bộ tham số tối ưu.  
+
+**Điểm yếu:**  
+- Lớp thiểu số (đặc biệt là lớp D) vẫn dự đoán kém.  
 
 ---
 
-## 🛠 Công cụ sử dụng
-- **Ngôn ngữ lập trình**: Python
-- **Thư viện**: Streamlit, CatBoost, Scikit-learn
-- **Nguồn dữ liệu**: Kaggle
+## 📈 Kết luận & Hướng phát triển  
 
-## Tài liệu tham khảo
-- CatBoost: https://www.geeksforgeeks.org/machine-learning/catboost-ml/
-- CatBoost Parameters and Hyperparameters: https://www.geeksforgeeks.org/machine-learning/catboost-parameters-and-hyperparameters/
-- Kaggle Dataset: https://www.kaggle.com/datasets/mahmoudelhemaly/students-grading-dataset
-- Scikit-learn documentation: https://scikit-learn.org/
-- Pandas documentation: https://pandas.pydata.org/
-- Matplotlib: https://matplotlib.org/
-- Streamlit: https://streamlit.io/
-```
+### ✅ Kết quả  
+- CatBoost cho hiệu suất **rất cao (Accuracy ~96%, F1-weighted ~96%)**.  
+- Mô hình vượt trội so với baseline và ổn định trên hầu hết các lớp.  
 
+### ⚠️ Hạn chế  
+- Dữ liệu mất cân bằng → ảnh hưởng đến lớp thiểu số.  
+- Tập dữ liệu nhỏ, khó khái quát cho quy mô lớn.  
+- Một số đặc trưng chưa đóng góp nhiều.  
 
+### 🚀 Hướng phát triển  
+- Thu thập thêm dữ liệu cho lớp thiểu số.  
+- Áp dụng **oversampling (SMOTE)** hoặc **class_weight**.  
+- Triển khai mô hình thành **chatbot tư vấn học tập** hoặc **dashboard real-time**.  
+- Bổ sung các yếu tố tâm lý, hành vi để cải thiện khả năng dự đoán.  
 
+---
+
+## 🛠 Công cụ sử dụng  
+- **Ngôn ngữ**: Python  
+- **Thư viện**: CatBoost, Scikit-learn, Pandas, Matplotlib, Streamlit  
+- **Nguồn dữ liệu**: Kaggle  
+
+---
+
+## 📚 Tài liệu tham khảo  
+- [CatBoost Documentation](https://catboost.ai/)  
+- [Scikit-learn Documentation](https://scikit-learn.org/)  
+- [Kaggle Dataset](https://www.kaggle.com/datasets/mahmoudelhemaly/students-grading-dataset)  
+- [Pandas Documentation](https://pandas.pydata.org/)  
+- [Matplotlib Documentation](https://matplotlib.org/)  
+- [Streamlit](https://streamlit.io/)  
